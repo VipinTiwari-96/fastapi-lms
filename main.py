@@ -1,27 +1,9 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import Optional, List
+from api import users, courses, sections
 
 app = FastAPI()
 
-class User(BaseModel):
-    email: str
-    is_active: bool
-    bio: Optional[str]
+app.include_router(users.router, tags=['Users'])
+app.include_router(courses.router, tags=['Courses'])
+app.include_router(sections.router, tags=['Sections'])
 
-    
-users= []
-
-@app.get("/users", response_model=List[User])
-async def get_users():
-    return users
-
-@app.get("/users/{id}")
-async def get_user(id:int):
-    return users[id]
-
-
-@app.post("/users")
-async def create_user(user:User):
-    users.append(user)
-    return 'success'
